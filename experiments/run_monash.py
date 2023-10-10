@@ -18,10 +18,10 @@ def get_datasets():
         x = np.random.permutation(x)
         benchmarks[k] = x
 
-    df = pd.read_csv('eval/last_value_results.csv')
+    df = pd.read_csv('data/last_value_results.csv')
     df.sort_values(by='mae')
 
-    df_paper = pd.read_csv('eval/paper_mae_raw.csv') # pdf text -> csv
+    df_paper = pd.read_csv('data/paper_mae_raw.csv') # pdf text -> csv
     datasets = df_paper['Dataset']
     name_map = {
         'Aus. Electricity Demand' :'australian_electricity_demand',
