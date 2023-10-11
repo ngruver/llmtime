@@ -2,7 +2,7 @@
 
 This repository contains the code for the paper
 [_Large Language Models Are Zero Shot Time Series Forecasters_](https://github.com/ngruver/llmtime/tree/main)
-by Marc Finzi, Nate Gruver, Shikai Qiu and Andrew Gordon Wilson (NeurIPS 2023).
+by Nate Gruver, Marc Finzi, Shikai Qiu and Andrew Gordon Wilson (NeurIPS 2023).
 
 <figure>
   <img src="./assets/llmtime_top_fig.png" alt="Image">
