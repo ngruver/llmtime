@@ -70,7 +70,7 @@ Please cite our work as:
 ```bibtex
 @inproceedings{finzi2023llmtime,
     title={{Large Language Models Are Zero Shot Time Series Forecasters}},
-    author={Marc Finzi, Nate Gruver, Shikai Qiu and Andrew Gordon Wilson},
+    author={Nate Gruver, Marc Finzi, Shikai Qiu and Andrew Gordon Wilson},
     booktitle={Advances in Neural Information Processing Systems},
     year={2023}
 }
