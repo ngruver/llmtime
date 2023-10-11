@@ -91,9 +91,9 @@ class SerializerSettings:
     - half_bin_correction (bool): If True, applies half bin correction during deserialization. Default is True.
     - decimal_point (str): String representation for the decimal point.
     """
-    base: int
-    prec: int
-    signed: bool = False
+    base: int = 10
+    prec: int = 3
+    signed: bool = True
     fixed_length: bool = False
     max_val: float = 1e7
     time_sep: str = ' ,'
