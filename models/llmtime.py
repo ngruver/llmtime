@@ -18,13 +18,13 @@ class Scaler:
     transform: callable = lambda x: x
     inv_transform: callable = lambda x: x    
 
-def get_scaler(history, alpha=.9, beta=.3, basic=False):
+def get_scaler(history, alpha=0.95, beta=0.3, basic=False):
     """
     Generate a Scaler object based on given history data.
 
     Args:
         history (array-like): Data to derive scaling from.
-        alpha (float, optional): Quantile for scaling. Defaults to .9.
+        alpha (float, optional): Quantile for scaling. Defaults to .95.
         # Truncate inputs
         tokens = [tokeniz]
         beta (float, optional): Shift parameter. Defaults to .3.

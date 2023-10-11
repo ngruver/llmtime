@@ -33,7 +33,9 @@ We currently support GPT-3, GPT-3.5, GPT-4, and LLaMA 2. It's easy to plug in ot
 
 ## 💡 Tips 
 Here are some tips for using LLMTime:
-- The recently released `gpt-3.5-turbo-instruct` seems to work better with a lower temperature (e.g. 0.3) than other models, and tends to not outperform `text-davinci-003` from our limited experiments.
+- Performance is not too sentitive to the data scaling hyperparameters `alpha, beta, basic`. A good default is `alpha=0.95, beta=0.3, basic=False`. For data exhibiting symmetry around 0 (e.g. a sine wave), we recommend setting `basic=True` to avoid shifting the data.
+- The recently released `gpt-3.5-turbo-instruct` seems to require a lower temperature (e.g. 0.3) than other models, and tends to not outperform `text-davinci-003` from our limited experiments.
+- Tuning hyperparameters based on validation likelihoods, as done by `get_autotuned_predictions_data`, will often yield better test likelihoods, but won't necessarily yield better samples. 
 
 ## 📊 Replicating experiments in paper
 Run the following commands to replicate the experiments in the paper. The outputs will be saved in `./outputs/`. You can use `visualize.ipynb` to visualize the results. We also provide precomputed outputs used in the paper in `./precomputed_outputs/`.
@@ -42,6 +44,11 @@ Run the following commands to replicate the experiments in the paper. The output
 python -m experiments.run_darts
 ```
 ### Monash (Section 4)
+First download and process the dataset
+```
+python -m data.monash
+```
+Then run the experiment
 ```
 python -m experiments.run_monash
 ```
@@ -61,10 +68,10 @@ python -m experiments.run_memorization
 ## Citation
 Please cite our work as:
 ```bibtex
-@article{finzi2023llmtime,
+@inproceedings{finzi2023llmtime,
     title={{Large Language Models Are Zero Shot Time Series Forecasters}},
     author={Marc Finzi, Nate Gruver, Shikai Qiu and Andrew Gordon Wilson},
-    journal={Neural Information Processing Systems (NeurIPS)},
+    booktitle={Advances in Neural Information Processing Systems},
     year={2023}
 }
 ```

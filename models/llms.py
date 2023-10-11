@@ -1,8 +1,8 @@
 from functools import partial
 from models.gpt import gpt_completion_fn, gpt_nll_fn
-import model.gpt.tokenize_fn as gpt_tokenize_fn
+from models.gpt import tokenize_fn as gpt_tokenize_fn
 from models.llama import llama_completion_fn, llama_nll_fn
-import model.llama.tokenize_fn as llama_tokenize_fn
+from models.llama import tokenize_fn as llama_tokenize_fn
 
 # Required: Text completion function for each model
 # -----------------------------------------------
