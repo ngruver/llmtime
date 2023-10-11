@@ -87,36 +87,36 @@ train_y = _train_y + np.random.normal(0, 0.05, len(_train_y))
 
 from pysr import PySRRegressor
 
-# model = PySRRegressor(
-#     niterations=100,  # < Increase me for better results
-#     binary_operators=["+", "*","-","/"],
-#     unary_operators=[
-#         "cos",
-#         "exp",
-#         "sin",
-#         # "square",
-#         # "inv(x) = 1/x",
-#         # ^ Custom operator (julia syntax)
-#     ],
-#     # constraints={
-#     #     "square": 4,
-#     #     "cube": 4,
-#     #     "exp": 4,
-#     # },
-#     maxsize=70,
-#     maxdepth=10,
-#     population_size=50,
-#     loss="loss(prediction, target) = abs(prediction - target)",
-#     model_selection='accuracy',
-#     # parsimony=0,
-#     # weight_mutate_constant=0.1,
-#     # weight_mutate_operator=0.75,
-#     # weight_randomize=0.01
-# )
-# model.fit(
-#     train_x.reshape(-1, 1), 
-#     train_y.reshape(-1, 1)
-# )
+model = PySRRegressor(
+    niterations=100,  # < Increase me for better results
+    binary_operators=["+", "*","-","/"],
+    unary_operators=[
+        "cos",
+        "exp",
+        "sin",
+        # "square",
+        # "inv(x) = 1/x",
+        # ^ Custom operator (julia syntax)
+    ],
+    # constraints={
+    #     "square": 4,
+    #     "cube": 4,
+    #     "exp": 4,
+    # },
+    maxsize=70,
+    maxdepth=10,
+    population_size=50,
+    loss="loss(prediction, target) = abs(prediction - target)",
+    model_selection='accuracy',
+    # parsimony=0,
+    # weight_mutate_constant=0.1,
+    # weight_mutate_operator=0.75,
+    # weight_randomize=0.01
+)
+model.fit(
+    train_x.reshape(-1, 1), 
+    train_y.reshape(-1, 1)
+)
 
 # model = PySRRegressor.from_file("/Users/nategruver/desktop/hall_of_fame_2023-10-04_114754.955.pkl")
 # model = PySRRegressor.from_file("/Users/nategruver/desktop/hall_of_fame_2023-10-04_115256.922.pkl")
