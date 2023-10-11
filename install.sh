@@ -11,5 +11,6 @@ pip install "pandas<2.0.0"
 pip install darts
 pip install gpytorch
 pip install transformers
+pip install datasets
 pip install multiprocess
 conda deactivate llmtime
