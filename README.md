@@ -35,6 +35,7 @@ We currently support GPT-3, GPT-3.5, GPT-4, and LLaMA 2. It's easy to plug in ot
 Here are some tips for using LLMTime:
 - Performance is not too sentitive to the data scaling hyperparameters `alpha, beta, basic`. A good default is `alpha=0.95, beta=0.3, basic=False`. For data exhibiting symmetry around 0 (e.g. a sine wave), we recommend setting `basic=True` to avoid shifting the data.
 - The recently released `gpt-3.5-turbo-instruct` seems to work better with a lower temperature (e.g. 0.3) than other models, and tends to not outperform `text-davinci-003` from our limited experiments.
+- Tuning hyperparameters based on validation likelihoods, as done by `get_autotuned_predictions_data`, will often yield better test likelihoods, but won't necessarily yield better samples. 
 
 ## 📊 Replicating experiments in paper
 Run the following commands to replicate the experiments in the paper. The outputs will be saved in `./outputs/`. You can use `visualize.ipynb` to visualize the results. We also provide precomputed outputs used in the paper in `./precomputed_outputs/`.
