@@ -22,11 +22,13 @@ llama_hypers = dict()
 
 model_hypers = {
     'text-davinci-003': {'model': 'text-davinci-003', **gpt3_hypers},
+    'llama-70b': {'model': 'llama-70b', **llama_hypers},
 }
 
 # Specify the function to get predictions for each model
 model_predict_fns = {
     'text-davinci-003': get_llmtime_predictions_data,
+    'llama-70b': get_llmtime_predictions_data,
 }
 
 def is_gpt(model):
