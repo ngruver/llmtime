@@ -68,7 +68,7 @@ python -m experiments.run_memorization
 ## Citation
 Please cite our work as:
 ```bibtex
-@inproceedings{finzi2023llmtime,
+@inproceedings{gruver2023llmtime,
     title={{Large Language Models Are Zero Shot Time Series Forecasters}},
     author={Nate Gruver, Marc Finzi, Shikai Qiu and Andrew Gordon Wilson},
     booktitle={Advances in Neural Information Processing Systems},
