@@ -1,7 +1,7 @@
 # Large Language Models Are Zero Shot Time Series Forecasters
 
 This repository contains the code for the paper
-[_Large Language Models Are Zero Shot Time Series Forecasters_](https://github.com/ngruver/llmtime/tree/main)
+[_Large Language Models Are Zero Shot Time Series Forecasters_](https://arxiv.org/abs/2310.07820)
 by Nate Gruver, Marc Finzi, Shikai Qiu and Andrew Gordon Wilson (NeurIPS 2023).
 
 <figure>
