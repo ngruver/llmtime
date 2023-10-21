@@ -35,8 +35,12 @@ def get_tokenizer(model):
     name_parts = model.split("-")
     model_size = name_parts[0]
     chat = len(name_parts) > 1
+    assert model_size in ["7b", "13b", "70b"]
 
-    assert model_size in ["7b", "13b", "70b"]  
+    tokenizer = LlamaTokenizer.from_pretrained(
+        llama2_model_string(model_size, chat),
+        use_fast=False,
+    )
 
     special_tokens_dict = dict()
     if tokenizer.eos_token is None:
@@ -49,10 +53,7 @@ def get_tokenizer(model):
     tokenizer.add_special_tokens(special_tokens_dict)
     tokenizer.pad_token = tokenizer.eos_token
 
-    tokenizer = LlamaTokenizer.from_pretrained(
-        llama2_model_string(model_size, chat),
-        use_fast=False,
-    )
+    return tokenizer
 
 def get_model_and_tokenizer(model):
     name_parts = model.split("-")
