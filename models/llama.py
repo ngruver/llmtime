@@ -62,14 +62,14 @@ def get_model_and_tokenizer(model):
 
     assert model_size in ["7b", "13b", "70b"]
 
+    tokenizer = get_tokenizer(model)
+
     model = LlamaForCausalLM.from_pretrained(
         llama2_model_string(model_size, chat),
         device_map="auto",   
         torch_dtype=torch.float16,
     )
     model.eval()
-
-    tokenizer = get_tokenizer(model)
 
     return model, tokenizer
 
@@ -137,7 +137,7 @@ def llama_completion_fn(
     settings,
     batch_size=1,
     num_samples=20,
-    temperature=0.9, 
+    temp=0.9, 
     top_p=0.9,
 ):
     avg_tokens_per_step = len(input_str)/steps
@@ -164,7 +164,7 @@ def llama_completion_fn(
             **batch,
             do_sample=True,
             max_new_tokens=max_tokens,
-            temperature=temperature, 
+            temperature=temp, 
             top_p=top_p, 
             bad_words_ids=[[t] for t in bad_tokens],
             renormalize_logits=True,
