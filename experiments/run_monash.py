@@ -47,8 +47,8 @@ output_dir = 'outputs/monash'
 os.makedirs(output_dir, exist_ok=True)
 
 models_to_run = [
-    # 'text-davinci-003',
-    'llama-7b',
+    'text-davinci-003',
+    # 'llama-7b',
     # 'llama-70b',
 ]
 datasets_to_run =  [
