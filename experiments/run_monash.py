@@ -7,7 +7,7 @@ from models.utils import grid_iter
 from models.llmtime import get_llmtime_predictions_data
 import numpy as np
 import openai
-openai.api_key = os.environ['OPENAI_API_KEY']
+# openai.api_key = os.environ['OPENAI_API_KEY']
 
 # Specify the hyperparameter grid for each model
 gpt3_hypers = dict(
@@ -18,16 +18,24 @@ gpt3_hypers = dict(
     settings=SerializerSettings(base=10, prec=3, signed=True, half_bin_correction=True),
 )
 
-llama_hypers = dict()
+llama_hypers = dict(
+    temp=1.0,
+    alpha=0.99,
+    beta=0,
+    basic=False,
+    settings=SerializerSettings(base=10, prec=3, signed=True, half_bin_correction=True),
+)
 
 model_hypers = {
     'text-davinci-003': {'model': 'text-davinci-003', **gpt3_hypers},
+    'llama-7b': {'model': 'llama-7b', **llama_hypers},
     'llama-70b': {'model': 'llama-70b', **llama_hypers},
 }
 
 # Specify the function to get predictions for each model
 model_predict_fns = {
     'text-davinci-003': get_llmtime_predictions_data,
+    'llama-7b': get_llmtime_predictions_data,
     'llama-70b': get_llmtime_predictions_data,
 }
 
@@ -38,6 +46,11 @@ def is_gpt(model):
 output_dir = 'outputs/monash'
 os.makedirs(output_dir, exist_ok=True)
 
+models_to_run = [
+    # 'text-davinci-003',
+    'llama-7b',
+    # 'llama-70b',
+]
 datasets_to_run =  [
     "covid_deaths", "solar_weekly", "tourism_monthly", "australian_electricity_demand", "pedestrian_counts",
     "traffic_hourly", "hospital", "fred_md", "tourism_yearly", "tourism_quarterly", "us_births",
@@ -57,7 +70,7 @@ for dsname in datasets_to_run:
     else:
         out_dict = {}
     
-    for model in ['text-davinci-003']:
+    for model in models_to_run:
         if model in out_dict:
             print(f"Skipping {dsname} {model}")
             continue
@@ -66,6 +79,7 @@ for dsname in datasets_to_run:
             hypers = list(grid_iter(model_hypers[model]))
         parallel = True if is_gpt(model) else False
         num_samples = 5
+        
         try:
             preds = get_autotuned_predictions_data(train, test, hypers, num_samples, model_predict_fns[model], verbose=False, parallel=parallel)
             medians = preds['median']
