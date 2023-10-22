@@ -116,7 +116,7 @@ def get_autotuned_predictions_data(train, test, hypers, num_samples, get_predict
         best_hyper = hypers[0]
         best_val_nll = float('inf')
     print(f'Sampling with best hyper... {best_hyper} \n with NLL {best_val_nll:3f}')
-    out = get_predictions_fn(train, test, **best_hyper, num_samples=num_samples, n_train=n_train)
+    out = get_predictions_fn(train, test, **best_hyper, num_samples=num_samples, n_train=n_train, parallel=parallel)
     out['best_hyper']=convert_to_dict(best_hyper)
     return out
     

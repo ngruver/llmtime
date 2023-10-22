@@ -6,6 +6,8 @@ import pandas as pd
 from dataclasses import dataclass
 from models.llms import completion_fns, nll_fns, tokenization_fns, context_lengths
 
+STEP_MULTIPLIER = 1.1
+
 @dataclass
 class Scaler:
     """
@@ -49,7 +51,7 @@ def get_scaler(history, alpha=0.95, beta=0.3, basic=False):
             return x * q + min_
     return Scaler(transform=transform, inv_transform=inv_transform)
 
-def truncate_input(input_arr, input_str, settings, model):
+def truncate_input(input_arr, input_str, settings, model, steps):
     """
     Truncate inputs to the maximum context length for a given model.
     
@@ -58,6 +60,7 @@ def truncate_input(input_arr, input_str, settings, model):
         input_str (str): serialized input time series.
         settings (SerializerSettings): Serialization settings.
         model (str): Name of the LLM model to use.
+        steps (int): Number of steps to predict.
     Returns:
         tuple: Tuple containing:
             - input (array-like): Truncated input time series.
@@ -67,13 +70,16 @@ def truncate_input(input_arr, input_str, settings, model):
         tokenization_fn = tokenization_fns[model]
         context_length = context_lengths[model]
         input_str_chuncks = input_str.split(settings.time_sep)
-        for i in range(len(input_str_chuncks)):
+        for i in range(len(input_str_chuncks) - 1):
             truncated_input_str = settings.time_sep.join(input_str_chuncks[i:])
             # add separator if not already present
             if not truncated_input_str.endswith(settings.time_sep):
                 truncated_input_str += settings.time_sep
-            tokens = tokenization_fn(truncated_input_str)
-            if len(tokens) <= context_length:
+            input_tokens = tokenization_fn(truncated_input_str)
+            num_input_tokens = len(input_tokens)
+            avg_token_length = num_input_tokens / (len(input_str_chuncks) - i)
+            num_output_tokens = avg_token_length * steps * STEP_MULTIPLIER
+            if num_input_tokens + num_output_tokens <= context_length:
                 truncated_input_arr = input_arr[i:]
                 break
         if i > 0:
@@ -117,6 +123,7 @@ def generate_predictions(
     temp=0.7, 
     parallel=True,
     strict_handling=False,
+    max_concurrent=10,
     **kwargs
 ):
     """
@@ -132,6 +139,7 @@ def generate_predictions(
         temp (float, optional): Temperature for sampling. Defaults to 0.7.
         parallel (bool, optional): If True, run completions in parallel. Defaults to True.
         strict_handling (bool, optional): If True, return None for predictions that don't have exactly the right format or expected length. Defaults to False.
+        max_concurrent (int, optional): Maximum number of concurrent completions. Defaults to 50.
         **kwargs: Additional keyword arguments.
 
     Returns:
@@ -142,10 +150,10 @@ def generate_predictions(
     """
     
     completions_list = []
-    complete = lambda x: completion_fn(input_str=x, steps=steps, settings=settings, num_samples=num_samples, temp=temp)
+    complete = lambda x: completion_fn(input_str=x, steps=steps*STEP_MULTIPLIER, settings=settings, num_samples=num_samples, temp=temp)
     if parallel and len(input_strs) > 1:
         print('Running completions in parallel for each input')
-        with ThreadPoolExecutor(len(input_strs)) as p:
+        with ThreadPoolExecutor(min(max_concurrent, len(input_strs))) as p:
             completions_list = list(tqdm(p.map(complete, input_strs), total=len(input_strs)))
     else:
         completions_list = [complete(input_str) for input_str in tqdm(input_strs)]
@@ -208,7 +216,7 @@ def get_llmtime_predictions_data(train, test, model, settings, num_samples=10, t
     # serialize input_arrs
     input_strs = [serialize_arr(scaled_input_arr, settings) for scaled_input_arr in transformed_input_arrs]
     # Truncate input_arrs to fit the maximum context length
-    input_arrs, input_strs = zip(*[truncate_input(input_array, input_str, settings, model) for input_array, input_str in zip(input_arrs, input_strs)])
+    input_arrs, input_strs = zip(*[truncate_input(input_array, input_str, settings, model, test_len) for input_array, input_str in zip(input_arrs, input_strs)])
     
     steps = test_len
     samples = None
@@ -231,8 +239,8 @@ def get_llmtime_predictions_data(train, test, model, settings, num_samples=10, t
         'completions_list': completions_list,
         'input_strs': input_strs,
     }
-    # Compute NLL/D on the true test series conditioned on the (truncated) input series
-    if nll_fn is not None:
-        BPDs = [nll_fn(input_arr=input_arrs[i], target_arr=test[i].values, settings=settings, transform=scalers[i].transform, count_seps=True, temp=temp) for i in range(len(train))]
-        out_dict['NLL/D'] = np.mean(BPDs)
+    # # Compute NLL/D on the true test series conditioned on the (truncated) input series
+    # if nll_fn is not None:
+    #     BPDs = [nll_fn(input_arr=input_arrs[i], target_arr=test[i].values, settings=settings, transform=scalers[i].transform, count_seps=True, temp=temp) for i in range(len(train))]
+    #     out_dict['NLL/D'] = np.mean(BPDs)
     return out_dict

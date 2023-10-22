@@ -7,6 +7,13 @@ from datasets import load_dataset
 import os
 import pickle
 
+fix_pred_len = {
+    'australian_electricity_demand': 336,
+    'pedestrian_counts': 24,
+    'traffic_hourly': 168,    
+}
+
+
 def get_benchmark_test_sets():
     test_set_dir = "datasets/monash"
     if not os.path.exists(test_set_dir):
@@ -41,6 +48,9 @@ def get_benchmark_test_sets():
                     continue
 
                 pred_len = len(val_example) - len(train_example)
+                if name in fix_pred_len:
+                    print(f"Fixing pred len for {name}: {pred_len} -> {fix_pred_len[name]}")
+                    pred_len = fix_pred_len[name]
 
                 tag = name
                 print("Processing", tag)
@@ -83,7 +93,8 @@ def get_datasets():
         test = [test[i] for i in ind]
         benchmarks[k] = [list(train), list(test)]
 
-    df = pd.read_csv('data/last_value_results.csv')
+    # df = pd.read_csv('data/last_value_results.csv')
+    df = pd.read_csv('data/last_val_mae.csv')
     df.sort_values(by='mae')
 
     df_paper = pd.read_csv('data/paper_mae_raw.csv') # pdf text -> csv

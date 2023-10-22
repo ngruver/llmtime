@@ -52,7 +52,7 @@ def gpt_completion_fn(model, input_str, steps, settings, num_samples, temp):
     Returns:
         list of str: List of generated samples.
     """
-    avg_tokens_per_step = len(input_str)/len(input_str.split(settings.time_sep))
+    avg_tokens_per_step = len(tokenize_fn(input_str, model)) / len(input_str.split(settings.time_sep))
     # define logit bias to prevent GPT-3 from producing unwanted tokens
     logit_bias = {}
     allowed_tokens = [settings.bit_sep + str(i) for i in range(settings.base)] 
