@@ -6,7 +6,7 @@ import pandas as pd
 from dataclasses import dataclass
 from models.llms import completion_fns, nll_fns, tokenization_fns, context_lengths
 
-STEP_MULTIPLIER = 1.1
+STEP_MULTIPLIER = 1.2
 
 @dataclass
 class Scaler:
@@ -45,6 +45,8 @@ def get_scaler(history, alpha=0.95, beta=0.3, basic=False):
     else:
         min_ = np.min(history) - beta*(np.max(history)-np.min(history))
         q = np.quantile(history-min_, alpha)
+        if q == 0:
+            q = 1
         def transform(x):
             return (x - min_) / q
         def inv_transform(x):
@@ -239,7 +241,7 @@ def get_llmtime_predictions_data(train, test, model, settings, num_samples=10, t
         'completions_list': completions_list,
         'input_strs': input_strs,
     }
-    # # Compute NLL/D on the true test series conditioned on the (truncated) input series
+    # Compute NLL/D on the true test series conditioned on the (truncated) input series
     # if nll_fn is not None:
     #     BPDs = [nll_fn(input_arr=input_arrs[i], target_arr=test[i].values, settings=settings, transform=scalers[i].transform, count_seps=True, temp=temp) for i in range(len(train))]
     #     out_dict['NLL/D'] = np.mean(BPDs)

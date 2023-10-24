@@ -12,7 +12,7 @@ by Nate Gruver, Marc Finzi, Shikai Qiu and Andrew Gordon Wilson (NeurIPS 2023).
 ## 🛠 Installation
 Run the following command to install all dependencies in a conda environment named `llmtime`. Change the cuda version for torch if you don't have cuda 11.8. 
 ```
-sh install.sh
+source install.sh
 ```
 After installation, activate the environment with
 ```

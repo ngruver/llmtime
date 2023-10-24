@@ -27,6 +27,8 @@ DEFAULT_EOS_TOKEN = "</s>"
 DEFAULT_BOS_TOKEN = "<s>"
 DEFAULT_UNK_TOKEN = "<unk>"
 
+loaded = {}
+
 def llama2_model_string(model_size, chat):
     chat = "chat-" if chat else ""
     return f"meta-llama/Llama-2-{model_size.lower()}-{chat}hf"
@@ -55,14 +57,16 @@ def get_tokenizer(model):
 
     return tokenizer
 
-def get_model_and_tokenizer(model):
-    name_parts = model.split("-")
+def get_model_and_tokenizer(model_name, cache_model=False):
+    if model_name in loaded:
+        return loaded[model_name]
+    name_parts = model_name.split("-")
     model_size = name_parts[0]
     chat = len(name_parts) > 1
 
     assert model_size in ["7b", "13b", "70b"]
 
-    tokenizer = get_tokenizer(model)
+    tokenizer = get_tokenizer(model_name)
 
     model = LlamaForCausalLM.from_pretrained(
         llama2_model_string(model_size, chat),
@@ -70,23 +74,25 @@ def get_model_and_tokenizer(model):
         torch_dtype=torch.float16,
     )
     model.eval()
-
+    if cache_model:
+        loaded[model_name] = model, tokenizer
     return model, tokenizer
 
 def tokenize_fn(str, model):
     tokenizer = get_tokenizer(model)
     return tokenizer(str)
 
-def llama_nll_fn(model, input_arr, target_arr, settings:SerializerSettings, transform, count_seps=True, temp=1):
+def llama_nll_fn(model, input_arr, target_arr, settings:SerializerSettings, transform, count_seps=True, temp=1, cache_model=True):
     """ Returns the NLL/dimension (log base e) of the target array (continuous) according to the LM 
         conditioned on the input array. Applies relevant log determinant for transforms and
         converts from discrete NLL of the LLM to continuous by assuming uniform within the bins.
     inputs:
         input_arr: (n,) context array
         target_arr: (n,) ground truth array
+        cache_model: whether to cache the model and tokenizer for faster repeated calls
     Returns: NLL/D
     """
-    model, tokenizer = get_model_and_tokenizer(model)
+    model, tokenizer = get_model_and_tokenizer(model, cache_model=cache_model)
 
     input_str = serialize_arr(vmap(transform)(input_arr), settings)
     target_str = serialize_arr(vmap(transform)(target_arr), settings)
@@ -140,10 +146,10 @@ def llama_completion_fn(
     temp=0.9, 
     top_p=0.9,
 ):
-    avg_tokens_per_step = len(input_str)/steps
+    avg_tokens_per_step = len(tokenize_fn(input_str, model)['input_ids']) / len(input_str.split(settings.time_sep))
     max_tokens = int(avg_tokens_per_step*steps)
     
-    model, tokenizer = get_model_and_tokenizer(model)
+    model, tokenizer = get_model_and_tokenizer(model, cache_model=True)
 
     gen_strs = []
     for _ in tqdm(range(num_samples // batch_size)):
@@ -154,10 +160,11 @@ def llama_completion_fn(
 
         batch = {k: v.repeat(batch_size, 1) for k, v in batch.items()}
         batch = {k: v.cuda() for k, v in batch.items()}
+        num_input_ids = batch['input_ids'].shape[1]
 
         good_tokens_str = list("0123456789" + settings.time_sep)
         good_tokens = [tokenizer.convert_tokens_to_ids(token) for token in good_tokens_str]
-        good_tokens += [tokenizer.eos_token_id]
+        # good_tokens += [tokenizer.eos_token_id]
         bad_tokens = [i for i in range(len(tokenizer)) if i not in good_tokens]
 
         generate_ids = model.generate(
@@ -169,13 +176,9 @@ def llama_completion_fn(
             bad_words_ids=[[t] for t in bad_tokens],
             renormalize_logits=True,
         )
-
         gen_strs += tokenizer.batch_decode(
-            generate_ids, 
+            generate_ids[:, num_input_ids:],
             skip_special_tokens=True, 
             clean_up_tokenization_spaces=False
         )
-
-    # gen_strs = [x.replace(input_str, '').strip() for x in gen_strs]
-
     return gen_strs

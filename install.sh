@@ -13,4 +13,6 @@ pip install gpytorch
 pip install transformers
 pip install datasets
 pip install multiprocess
+pip install SentencePiece
+pip install accelerate
 conda deactivate llmtime
