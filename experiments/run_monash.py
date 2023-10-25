@@ -21,9 +21,9 @@ gpt3_hypers = dict(
 llama_hypers = dict(
     temp=1.0,
     alpha=0.99,
-    beta=0,
+    beta=0.3,
     basic=False,
-    settings=SerializerSettings(base=10, prec=3, signed=True, half_bin_correction=True),
+    settings=SerializerSettings(base=10, prec=3, time_sep=',', bit_sep='', plus_sign='', minus_sign='-', signed=True), 
 )
 
 model_hypers = {

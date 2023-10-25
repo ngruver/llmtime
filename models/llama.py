@@ -141,7 +141,7 @@ def llama_completion_fn(
     input_str,
     steps,
     settings,
-    batch_size=1,
+    batch_size=5,
     num_samples=20,
     temp=0.9, 
     top_p=0.9,

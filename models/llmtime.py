@@ -242,7 +242,7 @@ def get_llmtime_predictions_data(train, test, model, settings, num_samples=10, t
         'input_strs': input_strs,
     }
     # Compute NLL/D on the true test series conditioned on the (truncated) input series
-    # if nll_fn is not None:
-    #     BPDs = [nll_fn(input_arr=input_arrs[i], target_arr=test[i].values, settings=settings, transform=scalers[i].transform, count_seps=True, temp=temp) for i in range(len(train))]
-    #     out_dict['NLL/D'] = np.mean(BPDs)
+    if nll_fn is not None:
+        BPDs = [nll_fn(input_arr=input_arrs[i], target_arr=test[i].values, settings=settings, transform=scalers[i].transform, count_seps=True, temp=temp) for i in range(len(train))]
+        out_dict['NLL/D'] = np.mean(BPDs)
     return out_dict
