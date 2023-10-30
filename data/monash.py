@@ -13,7 +13,6 @@ fix_pred_len = {
     'traffic_hourly': 168,    
 }
 
-
 def get_benchmark_test_sets():
     test_set_dir = "datasets/monash"
     if not os.path.exists(test_set_dir):
@@ -27,7 +26,6 @@ def get_benchmark_test_sets():
     
     benchmarks = {
         "monash_tsf": datasets.get_dataset_config_names("monash_tsf"),
-        # "ett": datasets.get_dataset_config_names("ett"),
     }
 
     test_sets = defaultdict(list)
@@ -93,7 +91,6 @@ def get_datasets():
         test = [test[i] for i in ind]
         benchmarks[k] = [list(train), list(test)]
 
-    # df = pd.read_csv('data/last_value_results.csv')
     df = pd.read_csv('data/last_val_mae.csv')
     df.sort_values(by='mae')
 
@@ -110,12 +107,11 @@ def get_datasets():
     # lower case and repalce spaces with underscores
     datasets = [d.lower().replace(' ', '_') for d in datasets]
     df_paper['Dataset'] = datasets
-    # remove from df_paper datasets in df_paper but not in df
-    df_paper = df_paper[df_paper['Dataset'].isin(df['dataset'])]
     df_paper = df_paper.reset_index(drop=True)
     # for each dataset, add last value mae to df_paper
     for dataset in df_paper['Dataset']:
-        df_paper.loc[df_paper['Dataset'] == dataset, 'Last Value'] = df[df['dataset'] == dataset]['mae'].values[0]
+        if dataset in df['dataset'].values:
+            df_paper.loc[df_paper['Dataset'] == dataset, 'Last Value'] = df[df['dataset'] == dataset]['mae'].values[0]
     # turn '-' into np.nan
     df_paper = df_paper.replace('-', np.nan)
     # convert all values to float
@@ -132,9 +128,7 @@ def get_datasets():
     df_paper = df_paper.reset_index(drop=True)
     # save as csv
     df_paper.to_csv('data/paper_mae_normalized.csv', index=False)
-    selected_datasets = df_paper.head(20)['Dataset']
-    datasets = {k: benchmarks[k] for k in selected_datasets}
-    return datasets
+    return benchmarks
 
 def main():
     get_datasets()
