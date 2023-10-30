@@ -15,4 +15,5 @@ pip install datasets
 pip install multiprocess
 pip install SentencePiece
 pip install accelerate
+pip install gdown
 conda deactivate llmtime

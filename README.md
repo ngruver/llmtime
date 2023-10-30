@@ -44,9 +44,13 @@ Run the following commands to replicate the experiments in the paper. The output
 python -m experiments.run_darts
 ```
 ### Monash (Section 4)
-First download and process the dataset
+You can download preprocessing data from [here](https://drive.google.com/file/d/1sKrpWbD3LvLQ_e5lWgX3wJqT50sTd1aZ/view?usp=sharing) or use the following command
 ```
-python -m data.monash
+gdown 'https://drive.google.com/uc?id=1sKrpWbD3LvLQ_e5lWgX3wJqT50sTd1aZ'
+```
+Then extract the data (the extracted data will be in `./datasets/monash/`)
+```
+tar -xzvf monash.tar.gz
 ```
 Then run the experiment
 ```

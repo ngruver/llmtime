@@ -1,27 +1,13 @@
-import os
-import random
 import torch
-import glob
-import itertools
-import pandas as pd
 import numpy as np
 from jax import grad,vmap
 from tqdm import tqdm
 import argparse
-from pathlib import Path
-import transformers
 from transformers import (
     LlamaForCausalLM, 
     LlamaTokenizer, 
-    LlamaConfig,
-    LogitsProcessorList
 )
 from data.serialize import serialize_arr, deserialize_str, SerializerSettings
-
-import pickle
-import matplotlib.pyplot as plt
-import pandas as pd
-from data.small_context import get_datasets
 
 DEFAULT_EOS_TOKEN = "</s>"
 DEFAULT_BOS_TOKEN = "<s>"
@@ -145,11 +131,12 @@ def llama_completion_fn(
     num_samples=20,
     temp=0.9, 
     top_p=0.9,
+    cache_model=True
 ):
     avg_tokens_per_step = len(tokenize_fn(input_str, model)['input_ids']) / len(input_str.split(settings.time_sep))
     max_tokens = int(avg_tokens_per_step*steps)
     
-    model, tokenizer = get_model_and_tokenizer(model, cache_model=True)
+    model, tokenizer = get_model_and_tokenizer(model, cache_model=cache_model)
 
     gen_strs = []
     for _ in tqdm(range(num_samples // batch_size)):
