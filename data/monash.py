@@ -19,10 +19,13 @@ def get_benchmark_test_sets():
         os.makedirs(test_set_dir)
 
     if len(os.listdir(test_set_dir)) > 0:
+        print(f'Loading test sets from {test_set_dir}')
         test_sets = {}
         for file in os.listdir(test_set_dir):
             test_sets[file.split(".")[0]] = pickle.load(open(os.path.join(test_set_dir, file), 'rb'))
         return test_sets
+    else:
+        print(f'No files found in {test_set_dir}. You are not using our preprocessed datasets!')
     
     benchmarks = {
         "monash_tsf": datasets.get_dataset_config_names("monash_tsf"),

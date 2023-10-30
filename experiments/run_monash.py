@@ -7,7 +7,7 @@ from models.utils import grid_iter
 from models.llmtime import get_llmtime_predictions_data
 import numpy as np
 import openai
-# openai.api_key = os.environ['OPENAI_API_KEY']
+openai.api_key = os.environ['OPENAI_API_KEY']
 
 # Specify the hyperparameter grid for each model
 gpt3_hypers = dict(
@@ -52,9 +52,9 @@ models_to_run = [
     # 'llama-70b',
 ]
 datasets_to_run =  [
-    "covid_deaths", "solar_weekly", "tourism_monthly", "australian_electricity_demand", "pedestrian_counts",
+    "weather", "covid_deaths", "solar_weekly", "tourism_monthly", "australian_electricity_demand", "pedestrian_counts",
     "traffic_hourly", "hospital", "fred_md", "tourism_yearly", "tourism_quarterly", "us_births",
-    "nn5_weekly","solar_10_minutes", "traffic_weekly", "saugeenday", "cif_2016",
+    "nn5_weekly", "traffic_weekly", "saugeenday", "cif_2016", "bitcoin", "sunspot", "nn5_daily"
 ]
 
 max_history_len = 500
