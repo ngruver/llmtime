@@ -28,6 +28,14 @@ gpt4_hypers = dict(
 )
 
 
+llama_hypers = dict(
+    temp=1.0,
+    alpha=0.99,
+    beta=0.3,
+    basic=False,
+    settings=SerializerSettings(base=10, prec=3, time_sep=',', bit_sep='', plus_sign='', minus_sign='-', signed=True), 
+)
+
 gp_hypers = dict(lr=[1e-2])
 
 arima_hypers = dict(p=[12,20,30], d=[1,2], q=[0,1,2])
@@ -57,6 +65,7 @@ model_hypers = {
     'N-HiTS': NHITS_hypers,
     'text-davinci-003': {'model': 'text-davinci-003', **gpt3_hypers},
     'gpt-4': {'model': 'gpt-4', **gpt4_hypers},
+    'llama-70b': {'model': 'llama-70b', **llama_hypers},
 }
 
 # Specify the function to get predictions for each model
@@ -68,6 +77,7 @@ model_predict_fns = {
     'N-HiTS': get_NHITS_predictions_data,
     'text-davinci-003': get_llmtime_predictions_data,
     'gpt-4': get_llmtime_predictions_data,
+    'llama-70b': get_llmtime_predictions_data,
 }
 
 def is_gpt(model):
