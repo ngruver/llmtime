@@ -16,4 +16,4 @@ pip install multiprocess
 pip install SentencePiece
 pip install accelerate
 pip install gdown
-conda deactivate llmtime
+conda deactivate
