@@ -8,6 +8,7 @@ from models.llmtime import get_llmtime_predictions_data
 import numpy as np
 import openai
 openai.api_key = os.environ['OPENAI_API_KEY']
+openai.api_base = os.environ.get("OPENAI_API_BASE", "https://api.openai.com/v1")
 
 # Specify the hyperparameter grid for each model
 gpt3_hypers = dict(

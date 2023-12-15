@@ -12,6 +12,7 @@ from darts.datasets import (
 import os
 import openai
 openai.api_key = os.environ['OPENAI_API_KEY']
+openai.api_base = os.environ.get("OPENAI_API_BASE", "https://api.openai.com/v1")
 from models.llmtime import get_llmtime_predictions_data
 from models.llms import nll_fns
 from data.serialize import SerializerSettings

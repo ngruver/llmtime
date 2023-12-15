@@ -2,6 +2,7 @@ import os
 import pickle
 import openai
 openai.api_key = os.environ['OPENAI_API_KEY']
+openai.api_base = os.environ.get("OPENAI_API_BASE", "https://api.openai.com/v1")
 from data.serialize import SerializerSettings
 from models.utils import grid_iter
 from models.gaussian_process import get_gp_predictions_data

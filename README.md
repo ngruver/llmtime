@@ -20,9 +20,14 @@ conda activate llmtime
 ```
 If you prefer not using conda, you can also install the dependencies listed in `install.sh` manually. 
 
-Finally, add your openai api key to `~/.bashrc` with
+Add your openai api key to `~/.bashrc` with
 ```
 echo "export OPENAI_API_KEY=<your key>" >> ~/.bashrc
+```
+
+Finally, if you have a diffferent OpenAI API base, change it in your `~/.bashrc` with
+```
+echo "export OPENAI_API_BASE=<your base url>" >> ~/.bashrc
 ```
 
 ## 🚀 Trying out LLMTime
