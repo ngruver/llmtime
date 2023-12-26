@@ -1,6 +1,10 @@
 import numpy as np
-from jax import vmap
+from jax import grad, vmap
 import jax.numpy as jnp
+import openai
+
+from .serialize import serialize_arr, SerializerSettings
+
 
 def quantile_loss(target, pred, q):
     q_pred = jnp.quantile(pred, q, axis=0)
@@ -8,17 +12,12 @@ def quantile_loss(target, pred, q):
         jnp.abs((q_pred - target) * ((target <= q_pred) * 1.0 - q))
     )
 
-def calculate_crps(target, pred, num_quantiles=20):
-    quantiles = jnp.linspace(0, 1.0, num_quantiles+1)[1:]
+def calculate_crps(target, pred, num_quantiles=10):
+    quantiles = (jnp.arange(num_quantiles)/num_quantiles)[1:]
     vec_quantile_loss = vmap(lambda q: quantile_loss(target, pred, q))
     crps = jnp.sum(vec_quantile_loss(quantiles))
     crps = crps / (jnp.sum(np.abs(target)) * len(quantiles))
     return crps
-
-import jax
-from jax import grad,vmap
-from .serialize import serialize_arr, SerializerSettings
-import openai
 
 def nll(input_arr, target_arr, model, settings:SerializerSettings, transform, count_seps=True, prompt=None, temp=1):
     """ Returns the NLL/dimension (log base e) of the target array (continuous) according to the LM 
