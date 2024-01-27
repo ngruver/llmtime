@@ -24,6 +24,10 @@ Add your openai api key to `~/.bashrc` with
 ```
 echo "export OPENAI_API_KEY=<your key>" >> ~/.bashrc
 ```
+Add your mistral api key to `~/.bashrc` with
+```
+echo "export MISTRAL_KEY=<your key>" >> ~/.bashrc
+```
 
 Finally, if you have a diffferent OpenAI API base, change it in your `~/.bashrc` with
 ```

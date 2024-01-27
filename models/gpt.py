@@ -58,9 +58,9 @@ def gpt_completion_fn(model, input_str, steps, settings, num_samples, temp):
     allowed_tokens = [settings.bit_sep + str(i) for i in range(settings.base)] 
     allowed_tokens += [settings.time_sep, settings.plus_sign, settings.minus_sign]
     allowed_tokens = [t for t in allowed_tokens if len(t) > 0] # remove empty tokens like an implicit plus sign
-    if (model not in ['gpt-3.5-turbo','gpt-4']): # logit bias not supported for chat models
+    if (model not in ['gpt-3.5-turbo','gpt-4','gpt-4-1106-preview']): # logit bias not supported for chat models
         logit_bias = {id: 30 for id in get_allowed_ids(allowed_tokens, model)}
-    if model in ['gpt-3.5-turbo','gpt-4']:
+    if model in ['gpt-3.5-turbo','gpt-4','gpt-4-1106-preview']:
         chatgpt_sys_message = "You are a helpful assistant that performs time series predictions. The user will provide a sequence and you will predict the remaining sequence. The sequence is represented by decimal strings separated by commas."
         extra_input = "Please continue the following sequence without producing any additional text. Do not say anything like 'the next terms in the sequence are', just return the numbers. Sequence:\n"
         response = openai.ChatCompletion.create(

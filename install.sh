@@ -16,4 +16,5 @@ pip install multiprocess
 pip install SentencePiece
 pip install accelerate
 pip install gdown
+pip install mistralai #for mistral models
 conda deactivate
