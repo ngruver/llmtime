@@ -7,8 +7,6 @@ import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import openai
 from time import perf_counter
-#openai.api_key = os.environ['OPENAI_API_KEY']   #Comment if you don't have an API key yet
-openai.api_base = os.environ.get("OPENAI_API_BASE", "https://api.openai.com/v1")
 from data.serialize import SerializerSettings
 from models.utils import grid_iter
 from models.promptcast import get_promptcast_predictions_data

@@ -19,18 +19,31 @@ After installation, activate the environment with
 conda activate llmtime
 ```
 If you prefer not using conda, you can also install the dependencies listed in `install.sh` manually. 
+Please note that  any API key will be required only if you use its model.
 
 Add your openai api key to `~/.bashrc` with
 ```
 echo "export OPENAI_API_KEY=<your key>" >> ~/.bashrc
 ```
+Windows Powershell command
+```
+$env:OPENAI_API_KEY='YOUR_API_KEY'
+```
 Add your mistral api key to `~/.bashrc` with
 ```
 echo "export MISTRAL_KEY=<your key>" >> ~/.bashrc
 ```
+Windows Powershell command
+```
+$env:MISTRAL_KEY='YOUR_API_KEY'
+```
 Add your Google Gemini Pro api key to `~/.bashrc` with
 ```
 echo "export GEMINI_PRO_KEY=<your key>" >> ~/.bashrc
+```
+Windows Powershell command
+```
+$env:GEMINI_PRO_KEY='YOUR_API_KEY'
 ```
 
 Finally, if you have a diffferent OpenAI API base, change it in your `~/.bashrc` with

@@ -16,5 +16,7 @@ pip install multiprocess
 pip install SentencePiece
 pip install accelerate
 pip install gdown
-pip install mistralai #for mistral models
+pip install mistralai
+pip install plotly
+pip google-generativeai
 conda deactivate

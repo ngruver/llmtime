@@ -1,5 +1,6 @@
 from data.serialize import serialize_arr, SerializerSettings
 import openai
+import os
 import tiktoken
 import numpy as np
 from jax import grad,vmap
@@ -63,6 +64,8 @@ def gpt_completion_fn(model, input_str, steps, settings, num_samples, temp):
     if model in ['gpt-3.5-turbo','gpt-4','gpt-4-1106-preview']:
         chatgpt_sys_message = "You are a helpful assistant that performs time series predictions. The user will provide a sequence and you will predict the remaining sequence. The sequence is represented by decimal strings separated by commas."
         extra_input = "Please continue the following sequence without producing any additional text. Do not say anything like 'the next terms in the sequence are', just return the numbers. Sequence:\n"
+        openai.api_key = os.environ['OPENAI_API_KEY']
+        openai.api_base = os.environ.get("OPENAI_API_BASE", "https://api.openai.com/v1")
         response = openai.ChatCompletion.create(
             model=model,
             messages=[
