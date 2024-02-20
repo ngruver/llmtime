@@ -7,9 +7,6 @@
       "request": "launch",
       "program": "${file}",
       "console": "integratedTerminal",
-      "env": {
-        "GEMINI_PRO_KEY":"AIzaSyCujqnqyAILrnqhshDtIAQ3oU5nn8hMtiU"
-      }
     },
   ]
 }
