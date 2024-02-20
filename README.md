@@ -28,6 +28,10 @@ Add your mistral api key to `~/.bashrc` with
 ```
 echo "export MISTRAL_KEY=<your key>" >> ~/.bashrc
 ```
+Add your Google Gemini Pro api key to `~/.bashrc` with
+```
+echo "export GEMINI_PRO_KEY=<your key>" >> ~/.bashrc
+```
 
 Finally, if you have a diffferent OpenAI API base, change it in your `~/.bashrc` with
 ```

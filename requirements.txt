@@ -1,0 +1,17 @@
+numpy
+torch --index-url https://download.pytorch.org/whl/cu118
+openai==0.28.1
+tiktoken
+tqdm
+matplotlib
+darts
+gpytorch
+transformers
+datasets
+multiprocess
+SentencePiece
+accelerate
+gdown
+mistralai
+plotly
+google-generativeai

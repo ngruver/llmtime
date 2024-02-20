@@ -4,6 +4,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from models.utils import grid_iter
 from dataclasses import is_dataclass
 from typing import Any
+from time import perf_counter
 
 def make_validation_dataset(train, n_val, val_length):
     """Partition the training set into training and validation sets.
@@ -65,6 +66,7 @@ def get_autotuned_predictions_data(train, test, hypers, num_samples, get_predict
     Returns:
         dict: Dictionary containing predictions, best hyperparameters, and other related information.
     """
+    start_time = perf_counter()
     if isinstance(hypers,dict):
         hypers = list(grid_iter(hypers))
     else:
@@ -118,6 +120,7 @@ def get_autotuned_predictions_data(train, test, hypers, num_samples, get_predict
     print(f'Sampling with best hyper... {best_hyper} \n with NLL {best_val_nll:3f}')
     out = get_predictions_fn(train, test, **best_hyper, num_samples=num_samples, n_train=n_train, parallel=parallel)
     out['best_hyper']=convert_to_dict(best_hyper)
+    passed_time = perf_counter() - start_time
     return out
     
 
