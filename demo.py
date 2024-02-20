@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import openai
 from time import perf_counter
-#openai.api_key = os.environ['OPENAI_API_KEY']
+#openai.api_key = os.environ['OPENAI_API_KEY']   #Comment if you don't have an API key yet
 openai.api_base = os.environ.get("OPENAI_API_BASE", "https://api.openai.com/v1")
 from data.serialize import SerializerSettings
 from models.utils import grid_iter
@@ -106,6 +106,7 @@ model_hypers = {
  }
 
 
+#uncomment to use a model
 model_predict_fns = {
     #'LLMA2': get_llmtime_predictions_data,
     #'mistral': get_llmtime_predictions_data,
@@ -119,40 +120,21 @@ model_predict_fns = {
 model_names = list(model_predict_fns.keys())
 
 
-
-#datasets = get_datasets()
-
-ds_name = 'SPY Index Daily'
-df = pd.read_csv('data/SPY_max_daily.csv')
-
-
-dfTrain = df.iloc[0:int(len(df)*0.8*0.5)]
-dfTrain = dfTrain.set_index('Date')
-train = dfTrain.iloc[:,1]
-dfTest = df[int(len(df)*0.8*0.5):int(len(df)*0.5)]
-dfTest = dfTest.set_index('Date')
-test = dfTest.iloc[:,1]
-
-
-""""
 datasets = get_datasets()
 ds_name = 'AirPassengersDataset'
-
 data = datasets[ds_name]
 train, test = data # or change to your own data
-"""
+
 
 
 
 out = {}
 start_time = perf_counter()
-for model in model_names: # GPT-4 takes a about a minute to run
-    model_hypers[model].update({'dataset_name': ds_name}) # for promptcast
+for model in model_names:
+    model_hypers[model].update({'dataset_name': ds_name})
     hypers = list(grid_iter(model_hypers[model]))
     num_samples = 10
     pred_dict = get_llmtime_predictions_data(train, test, model, model_hypers[model]['settings'],num_samples)
-    #pred_dict = model_predict_fns[model](train, test,**model_hypers[model] , num_samples=num_samples, n_train=None, parallel=True)
-    #pred_dict = get_autotuned_predictions_data(train, test, hypers, num_samples, model_predict_fns[model], verbose=False, parallel=False)
     out[model] = pred_dict
     plot_prds_ploty(ds_name,train, test, pred_dict, model, show_samples=True)
 passed_time = perf_counter() - start_time
