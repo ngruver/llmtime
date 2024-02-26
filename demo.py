@@ -101,6 +101,7 @@ model_hypers = {
      'mistral-api-stocks-medium': {'model': 'mistral-api-stocks-medium', **mistral_api_hypers},
      'gemini-pro': {'model': 'gemini-pro', **gemini_pro_hypers},
      'ARIMA': arima_hypers,
+     'fingpt': {'model': 'fingpt', **llma2_hypers},
  }
 
 
@@ -111,18 +112,33 @@ model_predict_fns = {
     #'LLMTime GPT-4': get_llmtime_predictions_data,
     #'mistral-api-tiny': get_llmtime_predictions_data,
     #'mistral-api-stocks-medium': get_llmtime_predictions_data,
-    'gemini-pro': get_llmtime_predictions_data
+    #'gemini-pro': get_llmtime_predictions_data,
+    'fingpt': get_llmtime_predictions_data
 }
+
 
 
 model_names = list(model_predict_fns.keys())
 
 
+
+ds_name = 'SPY Index Daily'
+df = pd.read_csv('data/SPY_max_daily.csv')
+
+
+dfTrain = df.iloc[0:int(len(df)*0.8*0.5)]
+dfTrain = dfTrain.set_index('Date')
+train = dfTrain.iloc[:,1]
+dfTest = df[int(len(df)*0.8*0.5):int(len(df)*0.5)]
+dfTest = dfTest.set_index('Date')
+test = dfTest.iloc[:,1]
+
+"""""
 datasets = get_datasets()
 ds_name = 'AirPassengersDataset'
 data = datasets[ds_name]
 train, test = data # or change to your own data
-
+"""""
 
 
 
@@ -137,3 +153,5 @@ for model in model_names:
     plot_prds_ploty(ds_name,train, test, pred_dict, model, show_samples=True)
 passed_time = perf_counter() - start_time
 print(f"Execution time  {passed_time}")
+
+
