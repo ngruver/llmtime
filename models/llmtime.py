@@ -1,4 +1,5 @@
 from tqdm import tqdm
+from time import perf_counter
 from data.serialize import serialize_arr, deserialize_str, SerializerSettings
 from concurrent.futures import ThreadPoolExecutor
 import numpy as np
@@ -68,6 +69,7 @@ def truncate_input(input_arr, input_str, settings, model, steps):
             - input (array-like): Truncated input time series.
             - input_str (str): Truncated serialized input time series.
     """
+    truncated_input_arr = None
     if model in tokenization_fns and model in context_lengths:
         tokenization_fn = tokenization_fns[model]
         context_length = context_lengths[model]
@@ -113,7 +115,7 @@ def handle_prediction(pred, expected_length, strict=False):
                 print(f'Warning: Prediction too short {len(pred)} < {expected_length}, padded with last value')
                 return np.concatenate([pred, np.full(expected_length - len(pred), pred[-1])])
         else:
-            return pred[:expected_length]
+            return pred[:expected_length]    
 
 def generate_predictions(
     completion_fn, 
@@ -219,15 +221,17 @@ def get_llmtime_predictions_data(train, test, model, settings, num_samples=10, t
     input_strs = [serialize_arr(scaled_input_arr, settings) for scaled_input_arr in transformed_input_arrs]
     # Truncate input_arrs to fit the maximum context length
     input_arrs, input_strs = zip(*[truncate_input(input_array, input_str, settings, model, test_len) for input_array, input_str in zip(input_arrs, input_strs)])
-    
     steps = test_len
     samples = None
     medians = None
     completions_list = None
     if num_samples > 0:
+        start_time = perf_counter()
         preds, completions_list, input_strs = generate_predictions(completion_fn, input_strs, steps, settings, scalers,
                                                                     num_samples=num_samples, temp=temp, 
                                                                     parallel=parallel, **kwargs)
+        passed_time = perf_counter() - start_time
+        print(f"Execution time for generate_predictions {passed_time}")
         samples = [pd.DataFrame(preds[i], columns=test[i].index) for i in range(len(preds))]
         medians = [sample.median(axis=0) for sample in samples]
         samples = samples if len(samples) > 1 else samples[0]
@@ -242,7 +246,9 @@ def get_llmtime_predictions_data(train, test, model, settings, num_samples=10, t
         'input_strs': input_strs,
     }
     # Compute NLL/D on the true test series conditioned on the (truncated) input series
+    #print('Computing NLL/D')
     if nll_fn is not None:
         BPDs = [nll_fn(input_arr=input_arrs[i], target_arr=test[i].values, settings=settings, transform=scalers[i].transform, count_seps=True, temp=temp) for i in range(len(train))]
         out_dict['NLL/D'] = np.mean(BPDs)
+    
     return out_dict

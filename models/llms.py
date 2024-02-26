@@ -10,6 +10,15 @@ from models.mistral import tokenize_fn as mistral_tokenize_fn
 from models.mistral_api import mistral_api_completion_fn, mistral_api_nll_fn
 from models.mistral_api import tokenize_fn as mistral_api_tokenize_fn
 
+from models.mistral_api_stocks import mistral_api_stocks_completion_fn
+from models.mistral_api_stocks import  mistral_stocks_api_nll_fn 
+from models.mistral_api_stocks import  mistral_api_stocks_tokenize_fn
+
+from models.google_gemini_pro import google_gemini_pro_completion_fn, google_gemini_pro_tokenize_fn,google_gemini_pro_nll_fn
+
+from models.fingpt import tokenize_fn as fingpt_tokenize_fn
+from models.fingpt import fingpt_completion_fn 
+from models.fingpt import fingpt_nll_fn 
 
 # Required: Text completion function for each model
 # -----------------------------------------------
@@ -34,12 +43,17 @@ completion_fns = {
     'mistral-api-tiny': partial(mistral_api_completion_fn, model='mistral-tiny'),
     'mistral-api-small': partial(mistral_api_completion_fn, model='mistral-small'),
     'mistral-api-medium': partial(mistral_api_completion_fn, model='mistral-medium'),
+    'mistral-api-stocks-tiny': partial(mistral_api_stocks_completion_fn, model='mistral-tiny'),
+    'mistral-api-stocks-small': partial(mistral_api_stocks_completion_fn, model='mistral-small'),
+    'mistral-api-stocks-medium': partial(mistral_api_stocks_completion_fn, model='mistral-medium'),
     'llama-7b': partial(llama_completion_fn, model='7b'),
     'llama-13b': partial(llama_completion_fn, model='13b'),
     'llama-70b': partial(llama_completion_fn, model='70b'),
     'llama-7b-chat': partial(llama_completion_fn, model='7b-chat'),
     'llama-13b-chat': partial(llama_completion_fn, model='13b-chat'),
     'llama-70b-chat': partial(llama_completion_fn, model='70b-chat'),
+    'gemini-pro': partial(google_gemini_pro_completion_fn, model='gemini-pro'),
+    'fingpt': partial(fingpt_completion_fn, model='fingpt'),
 }
 
 # Optional: NLL/D functions for each model
@@ -65,6 +79,9 @@ nll_fns = {
     'mistral-api-tiny': partial(mistral_api_nll_fn, model='mistral-tiny'),
     'mistral-api-small': partial(mistral_api_nll_fn, model='mistral-small'),
     'mistral-api-medium': partial(mistral_api_nll_fn, model='mistral-medium'),
+    'mistral-api-stocks-tiny': partial(mistral_stocks_api_nll_fn, model='mistral-tiny'),
+    'mistral-api-stocks-small': partial(mistral_stocks_api_nll_fn, model='mistral-small'),
+    'mistral-api-stocks-medium': partial(mistral_stocks_api_nll_fn, model='mistral-medium'),
     'llama-7b': partial(llama_completion_fn, model='7b'),
     'llama-7b': partial(llama_nll_fn, model='7b'),
     'llama-13b': partial(llama_nll_fn, model='13b'),
@@ -72,6 +89,8 @@ nll_fns = {
     'llama-7b-chat': partial(llama_nll_fn, model='7b-chat'),
     'llama-13b-chat': partial(llama_nll_fn, model='13b-chat'),
     'llama-70b-chat': partial(llama_nll_fn, model='70b-chat'),
+    'gemini-pro': partial(google_gemini_pro_nll_fn, model='gemini-pro'),
+    'fingpt': partial(fingpt_nll_fn, model='fingpt'),
 }
 
 # Optional: Tokenization function for each model, only needed if you want automatic input truncation.
@@ -88,21 +107,30 @@ tokenization_fns = {
     'mistral-api-tiny': partial(mistral_api_tokenize_fn, model='mistral-tiny'),
     'mistral-api-small': partial(mistral_api_tokenize_fn, model='mistral-small'),
     'mistral-api-medium': partial(mistral_api_tokenize_fn, model='mistral-medium'),
+    'mistral-api-stocks-tiny': partial(mistral_api_stocks_tokenize_fn, model='mistral-tiny'),
+    'mistral-api-stocks-small': partial(mistral_api_stocks_tokenize_fn, model='mistral-small'),
+    'mistral-api-stocks-medium': partial(mistral_api_stocks_tokenize_fn, model='mistral-medium'),
     'llama-7b': partial(llama_tokenize_fn, model='7b'),
     'llama-13b': partial(llama_tokenize_fn, model='13b'),
     'llama-70b': partial(llama_tokenize_fn, model='70b'),
     'llama-7b-chat': partial(llama_tokenize_fn, model='7b-chat'),
     'llama-13b-chat': partial(llama_tokenize_fn, model='13b-chat'),
     'llama-70b-chat': partial(llama_tokenize_fn, model='70b-chat'),
+    'gemini-pro': partial(google_gemini_pro_tokenize_fn, model='gemini-pro'),
+    'fingpt': partial(fingpt_tokenize_fn, model='fingpt'),
 }
 
 # Optional: Context lengths for each model, only needed if you want automatic input truncation.
 context_lengths = {
     'text-davinci-003': 4097,
+    'gpt-4': 32000,
     'gpt-3.5-turbo-instruct': 4097,
     'mistral-api-tiny': 4097,
     'mistral-api-small': 4097,
-    'mistral-api-medium': 4097,
+    'mistral-api-medium': 30000,
+    'mistral-api-stocks-tiny': 4097,
+    'mistral-api-stocks-small': 4097,
+    'mistral-api-stocks-medium': 30000,
     'mistral': 4096,
     'llama-7b': 4096,
     'llama-13b': 4096,
@@ -110,4 +138,6 @@ context_lengths = {
     'llama-7b-chat': 4096,
     'llama-13b-chat': 4096,
     'llama-70b-chat': 4096,
+    'gemini-pro': 30000,
+    'fingpt': 4096
 }
