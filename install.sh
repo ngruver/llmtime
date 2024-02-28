@@ -17,4 +17,6 @@ pip install SentencePiece
 pip install accelerate
 pip install gdown
 pip install mistralai #for mistral models
+pip install streamlit # for frontend
+pip install fastapi # for api
 conda deactivate

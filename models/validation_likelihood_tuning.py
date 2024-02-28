@@ -1,7 +1,7 @@
 import numpy as np
 from tqdm.auto import tqdm
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from models.utils import grid_iter
+from llmtime.models.utils import grid_iter
 from dataclasses import is_dataclass
 from typing import Any
 

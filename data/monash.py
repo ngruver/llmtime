@@ -14,7 +14,7 @@ fix_pred_len = {
 }
 
 def get_benchmark_test_sets():
-    test_set_dir = "datasets/monash"
+    test_set_dir = "llmtime/datasets/monash"
     if not os.path.exists(test_set_dir):
         os.makedirs(test_set_dir)
 
@@ -94,10 +94,10 @@ def get_datasets():
         test = [test[i] for i in ind]
         benchmarks[k] = [list(train), list(test)]
 
-    df = pd.read_csv('data/last_val_mae.csv')
+    df = pd.read_csv('llmtime/data/last_val_mae.csv')
     df.sort_values(by='mae')
 
-    df_paper = pd.read_csv('data/paper_mae_raw.csv') # pdf text -> csv
+    df_paper = pd.read_csv('llmtime/data/paper_mae_raw.csv') # pdf text -> csv
     datasets = df_paper['Dataset']
     name_map = {
         'Aus. Electricity Demand' :'australian_electricity_demand',

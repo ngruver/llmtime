@@ -1,4 +1,4 @@
-from data.serialize import serialize_arr, SerializerSettings
+from llmtime.data.serialize import serialize_arr, SerializerSettings
 from mistralai.client import MistralClient
 from mistralai.models.chat_completion import ChatMessage
 import tiktoken

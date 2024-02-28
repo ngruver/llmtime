@@ -1,14 +1,14 @@
 from functools import partial
-from models.gpt import gpt_completion_fn, gpt_nll_fn
-from models.gpt import tokenize_fn as gpt_tokenize_fn
-from models.llama import llama_completion_fn, llama_nll_fn
-from models.llama import tokenize_fn as llama_tokenize_fn
+from llmtime.models.gpt import gpt_completion_fn, gpt_nll_fn
+from llmtime.models.gpt import tokenize_fn as gpt_tokenize_fn
+from llmtime.models.llama import llama_completion_fn, llama_nll_fn
+from llmtime.models.llama import tokenize_fn as llama_tokenize_fn
 
-from models.mistral import mistral_completion_fn, mistral_nll_fn
-from models.mistral import tokenize_fn as mistral_tokenize_fn
+from llmtime.models.mistral import mistral_completion_fn, mistral_nll_fn
+from llmtime.models.mistral import tokenize_fn as mistral_tokenize_fn
 
-from models.mistral_api import mistral_api_completion_fn, mistral_api_nll_fn
-from models.mistral_api import tokenize_fn as mistral_api_tokenize_fn
+from llmtime.models.mistral_api import mistral_api_completion_fn, mistral_api_nll_fn
+from llmtime.models.mistral_api import tokenize_fn as mistral_api_tokenize_fn
 
 
 # Required: Text completion function for each model

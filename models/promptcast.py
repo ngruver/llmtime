@@ -1,15 +1,15 @@
-from data.metrics import Evaluator
+from llmtime.data.metrics import Evaluator
 from tqdm import tqdm
 from multiprocess import Pool
 from functools import partial
 import tiktoken
 from functools import partial
-from data.serialize import serialize_arr, deserialize_str, SerializerSettings
+from llmtime.data.serialize import serialize_arr, deserialize_str, SerializerSettings
 import openai
 from concurrent.futures import ThreadPoolExecutor
 import numpy as np
 import matplotlib.pyplot as plt
-from data.metrics import nll
+from llmtime.data.metrics import nll
 import pandas as pd
 from dataclasses import dataclass
 

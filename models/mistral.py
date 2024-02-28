@@ -7,7 +7,7 @@ from transformers import (
     AutoModelForCausalLM, 
     AutoTokenizer, 
 )
-from data.serialize import serialize_arr, deserialize_str, SerializerSettings
+from llmtime.data.serialize import serialize_arr, deserialize_str, SerializerSettings
 
 DEFAULT_EOS_TOKEN = "</s>"
 DEFAULT_BOS_TOKEN = "<s>"
