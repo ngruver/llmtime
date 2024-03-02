@@ -20,13 +20,9 @@ conda activate llmtime
 ```
 If you prefer not using conda, you can also install the dependencies listed in `install.sh` manually. 
 
-Add your openai api key to `~/.bashrc` with
+If you want to run OpenAI models through their API (doesn't require access to a GPU), add your openai api key to `~/.bashrc` with
 ```
 echo "export OPENAI_API_KEY=<your key>" >> ~/.bashrc
-```
-Add your mistral api key to `~/.bashrc` with
-```
-echo "export MISTRAL_KEY=<your key>" >> ~/.bashrc
 ```
 
 Finally, if you have a diffferent OpenAI API base, change it in your `~/.bashrc` with
@@ -38,7 +34,12 @@ echo "export OPENAI_API_BASE=<your base url>" >> ~/.bashrc
 Want a quick taste of the power of LLMTime? Run the quick demo in the `demo.ipynb` notebook. No GPUs required!
 
 ## 🤖 Plugging in other LLMs
-We currently support GPT-3, GPT-3.5, GPT-4, and LLaMA 2. It's easy to plug in other LLMs by simply specifying how to generate text completions from them in `models/llms.py`.
+We currently support GPT-3, GPT-3.5, GPT-4, Mistral, and LLaMA 2. It's easy to plug in other LLMs by simply specifying how to generate text completions from them in `models/llms.py`.
+
+To run Mistral models, add your mistral api key to `~/.bashrc` with
+```
+echo "export MISTRAL_KEY=<your key>" >> ~/.bashrc
+```
 
 ## 💡 Tips 
 Here are some tips for using LLMTime:
