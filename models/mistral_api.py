@@ -1,6 +1,5 @@
 from data.serialize import serialize_arr, SerializerSettings
-from mistralai.client import MistralClient
-from mistralai.models.chat_completion import ChatMessage
+from mistralai import Mistral, UserMessage
 import tiktoken
 import os
 import numpy as np
@@ -16,7 +15,7 @@ def init_mistral_client(model):
     global loaded_model, mistral_client
     if mistral_client == {} or loaded_model != model:
         loaded_model = model
-        mistral_client = MistralClient(os.environ['MISTRAL_KEY'])
+        mistral_client = Mistral(os.environ['MISTRAL_KEY'])
     return mistral_client
 
 def tokenize_fn(str, model):
@@ -77,7 +76,8 @@ def mistral_api_completion_fn(model, input_str, steps, settings, num_samples, te
         extra_input = "Please continue the following sequence without producing any additional text. Do not say anything like 'the next terms in the sequence are', just return the numbers. Sequence:\n"
         response = init_mistral_client(model).chat(
             model=model,
-            messages=[ChatMessage(role="system", content = mistral_sys_message),ChatMessage(role="user", content= (extra_input+input_str+settings.time_sep))],
+            messages=[{'role':"system", 'content' : mistral_sys_message},
+                      {'role':"user", 'content': extra_input+input_str+settings.time_sep}],
             max_tokens=int(avg_tokens_per_step*steps), 
             temperature=temp,
         )
@@ -103,6 +103,6 @@ def mistral_api_nll_fn(model, input_arr, target_arr, settings:SerializerSettings
     target_str = serialize_arr(vmap(transform)(target_arr), settings)
     assert input_str.endswith(settings.time_sep), f'Input string must end with {settings.time_sep}, got {input_str}'
     full_series = input_str + target_str
-    response = init_mistral_client(model).chat_stream(model=model, messages=[ChatMessage(role="user",content=full_series)], max_tokens=0, temperature=temp,)
+    response = init_mistral_client(model).chat.stream(model=model, messages={'role':"user",'content':full_series}, max_tokens=0, temperature=temp,)
     #print(response['choices'][0])
     return -1
